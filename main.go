@@ -88,7 +88,10 @@ func main() {
 	for _, fileName := range fileNames {
 		wait.Add(1)
 		go func(fileName string) {
-			grep(fileName, keywords)
+			info, err := os.Stat(fileName)
+			if err == nil && !info.Mode().IsDir() {
+				grep(fileName, keywords)
+			}
 			wait.Done()
 		}(fileName)
 	}
